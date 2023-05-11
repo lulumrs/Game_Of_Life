@@ -18,6 +18,7 @@ public class Simulator extends Thread {
 	private boolean stopFlag;
 	private boolean pauseFlag;
 	private int loopDelay;
+	private int minimalCellSize;
 	//TODO : add declaration of additional attributes here
 
 	public Simulator(MyInterface mjfParam) {
@@ -25,6 +26,7 @@ public class Simulator extends Thread {
 		stopFlag=false;
 		pauseFlag=false;
 		loopDelay = 150;
+		minimalCellSize = 30;// in pixel
 		//TODO : add other attribute initialization here
 
 	}
@@ -34,8 +36,9 @@ public class Simulator extends Thread {
 	 * @return the number of columns in the grid composing the simulated world
 	 */
 	public int getWidth() {
-		//TODO : correct return
-		return 0;
+		int width;
+		width =(int) (mjf.getPanelDessin().getWidth()/minimalCellSize);
+		return width;
 	}
 
 	/**
@@ -43,8 +46,9 @@ public class Simulator extends Thread {
 	 * @return the number of rows in the grid composing the simulated world
 	 */
 	public int getHeight() {
-		//TODO : correct return
-		return 0;
+		int height;
+		height =(int) (mjf.getPanelDessin().getHeight()/minimalCellSize);
+		return height;
 	}
 	
 	public void run() {
