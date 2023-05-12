@@ -19,6 +19,7 @@ public class Simulator extends Thread {
 	private boolean pauseFlag;
 	private int loopDelay;
 	private int minimalCellSize;
+	private Grid grid;
 	//TODO : add declaration of additional attributes here
 
 	public Simulator(MyInterface mjfParam) {
@@ -28,6 +29,7 @@ public class Simulator extends Thread {
 		loopDelay = 150;
 		minimalCellSize = 30;// in pixel
 		//TODO : add other attribute initialization here
+		grid = new Grid(this);
 
 	}
 	
@@ -140,6 +142,7 @@ public class Simulator extends Thread {
 		//TODO implement proper return
 		return 0;
 	}
+
 
 	/**
 	 * set the value of a cell at coordinates
