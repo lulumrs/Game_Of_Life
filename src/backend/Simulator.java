@@ -17,9 +17,10 @@ public class Simulator extends Thread {
 	private MyInterface mjf;
 	private boolean stopFlag;
 	private boolean pauseFlag;
+	private boolean loopedBorders;
 	private int loopDelay;
 	private int minimalCellSize;
-	private Grid grid;
+	public Grid grid;
 	//TODO : add declaration of additional attributes here
 
 	public Simulator(MyInterface mjfParam) {
@@ -28,6 +29,7 @@ public class Simulator extends Thread {
 		pauseFlag=false;
 		loopDelay = 150;
 		minimalCellSize = 30;// in pixel
+		loopedBorders = false;
 		//TODO : add other attribute initialization here
 		grid = new Grid(this);
 
@@ -96,6 +98,16 @@ public class Simulator extends Thread {
 		 * be it as variables or as attributes you may add to the class Simulator,
 		 * by using their (public) methods.
 		 */
+		for (int i = 0; i < getHeight();i++) {
+			for (int j = 0; j < getWidth();j++) {
+				setCell(j, i, grid.checkLiveOrDeath(j, i));
+			}
+		}
+		for (int i = 0; i < getHeight();i++) {
+			for (int j = 0; j < getWidth();j++) {
+				grid.getCell(j, i).setValue();
+			}
+		}
 		
 	}
 
@@ -103,7 +115,7 @@ public class Simulator extends Thread {
 	 * Stops simulation by raising the stop flag used in the run method
 	 */
 	public void stopSimu() {
-		//TODO : set stopFlag to true
+		stopFlag = true;
 		
 	}
 
@@ -112,8 +124,7 @@ public class Simulator extends Thread {
 	 * by raising or lowering the pause flag used in the run method
 	 */
 	public void togglePause() {
-		//TODO : change value of boolean attribute pauseFlag
-		// from false to true, or from true to false
+		pauseFlag = !pauseFlag;
 
 	}
 	/**
@@ -124,13 +135,7 @@ public class Simulator extends Thread {
 	 * @param y coordinate on the y-axis (vertical)
 	 */
 	public void toggleCell(int x, int y) {
-		//TODO : change the value of the cell at coordinates (x,y)
-		/*
-		 * Note : the value of the cell is NOT a boolean, it is an integer.
-		 * O means dead, 1 means alive...
-		 * But the GUI can also print properly more values than that.
-		 * You might want to use this for the going further section.
-		 */
+		grid.getCell(x, y).toggle();
 	}
 	/**
 	 * get the value of a cell at coordinates
@@ -140,18 +145,18 @@ public class Simulator extends Thread {
 	 */
 	public int getCell(int x, int y) {
 		//TODO implement proper return
-		return 0;
+		return grid.getCell(x, y).getValue();
 	}
 
 
 	/**
-	 * set the value of a cell at coordinates
+	 * set the future value of a cell at coordinates
 	 * @param x coordinate
 	 * @param y coordinate
 	 * @param val the value to set inside the cell
 	 */
 	public void setCell(int x, int y, int val) {
-		//TODO implement
+		grid.getCell(x, y).setFutureValue(val);
 	}
 
 	/**
@@ -191,8 +196,7 @@ public class Simulator extends Thread {
 	 * @return true if the borders are looping, false otherwise
 	 */
 	public boolean isLoopingBorder() {
-		//TODO implement correct return
-		return false;
+		return loopedBorders;
 	}
 	
 	/**
@@ -200,7 +204,7 @@ public class Simulator extends Thread {
 	 * depending on the present state
 	 */
 	public void toggleLoopingBorder() {
-		//TODO implement
+		loopedBorders = !loopedBorders;
 	}
 	
 	/**
@@ -208,6 +212,7 @@ public class Simulator extends Thread {
 	 * @param delay in milliseconds
 	 */
 	public void setLoopDelay(int delay) {
+		loopDelay = delay;
 		//TODO : implement
 	}
 }

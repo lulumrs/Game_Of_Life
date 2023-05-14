@@ -28,6 +28,8 @@ public class JPanelDraw extends JPanel {
 				int x = (me.getX() * mySimu.getWidth()) / getWidth();
 				int y = (me.getY() * mySimu.getHeight()) / getHeight();
 				mySimu.toggleCell(x, y);
+				System.out.println(x+" "+y);
+				revalidate();
 				repaint();
 			}
 		});
@@ -56,7 +58,15 @@ public class JPanelDraw extends JPanel {
 			}
 			for (int x = 0; x < mySimu.getWidth(); x++) {
 				for (int y = 0; y < mySimu.getHeight(); y++) {
-					int cellContent = mySimu.getCell(x, y);
+
+					//Update the grid
+					mySimu.grid.updateGrid();
+					int cellContent = 0;
+					try {
+						cellContent = mySimu.getCell(x, y);
+					} catch (Exception e) {
+					}
+					
 					if (cellContent == 0) {
 						continue;
 					}
