@@ -76,21 +76,23 @@ public class Grid {
 			for (int j = x-1;j<=x+1;j++) {
 				if (!(i == y && j == x)) {
 					//check for the borders if they are looping or not !
-					if(j<0&&simu.isLoopingBorder()) {
-						j=tableau.get(0).size()-1;
+					int i_val = i;
+					int j_val = j;
+					if(j_val<0&&simu.isLoopingBorder()) {
+						j_val=tableau.get(0).size()-1;
 					}
-					if(i<0&&simu.isLoopingBorder()) {
-						i=tableau.size()-1;
+					if(i_val<0&&simu.isLoopingBorder()) {
+						i_val=tableau.size()-1;
 					}
-					if(j>tableau.get(0).size()-1&&simu.isLoopingBorder()) {
-						j=0;
+					if(j_val>tableau.get(0).size()-1&&simu.isLoopingBorder()) {
+						j_val=0;
 					}
-					if(i>tableau.size()-1&&simu.isLoopingBorder()) {
-						i=0;
+					if(i_val>tableau.size()-1&&simu.isLoopingBorder()) {
+						i_val=0;
 					}
 					//take into consideration only the part we are interested for to not look out of the grid
-					if (i>=0&&i<tableau.size()&&j>=0&&j<tableau.get(i).size()) {
-						if (value==tableau.get(i).get(j).getValue()) {
+					if (i_val>=0&&i_val<tableau.size()&&j_val>=0&&j_val<tableau.get(i_val).size()) {
+						if (value==tableau.get(i_val).get(j_val).getValue()) {
 							nbOfNeighbors++;
 						}
 					}
@@ -103,7 +105,7 @@ public class Grid {
 	public void checkLineIntegrity() {
 		for (int i = 0; i<simu.getHeight();i++) {
 			if (tableau.get(i).size()!=simu.getWidth()) {
-				for (int j = tableau.get(i).size()-1; j<simu.getHeight();j++) {
+				for (int j = tableau.get(i).size()-1; j<simu.getWidth();j++) {
 					tableau.get(i).add(new Cell(0,0,0));
 				}
 			}

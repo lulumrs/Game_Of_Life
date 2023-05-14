@@ -1,6 +1,5 @@
 package backend;
 
-
 import windowInterface.MyInterface;
 //TODO : add imports you will need here
 /*
@@ -29,7 +28,7 @@ public class Simulator extends Thread {
 		pauseFlag=false;
 		loopDelay = 150;
 		minimalCellSize = 30;// in pixel
-		loopedBorders = false;
+		loopedBorders = true;
 		//TODO : add other attribute initialization here
 		grid = new Grid(this);
 
@@ -67,6 +66,7 @@ public class Simulator extends Thread {
 		int stepCount=0;
 		while(!stopFlag) {
 			stepCount++;
+			grid.updateGrid();
 			makeStep();
 			mjf.update(stepCount);
 			try {
