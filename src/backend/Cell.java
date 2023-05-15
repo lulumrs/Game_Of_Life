@@ -29,6 +29,9 @@ public class Cell {
 			value = 0;
 		}
 	}
+	public void adressNewValue(int value) {
+		this.value = value;
+	}
 	public void setValue() {
 		this.value = FutureValue;
 	}

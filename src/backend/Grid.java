@@ -42,6 +42,10 @@ public class Grid {
 		return tableau.get(y).get(x);
 	}
 	
+	public ArrayList<ArrayList<Cell>> getTableau(){
+		return tableau;
+	}
+	
 	/**
 	 * Return if the cell come to life; highest color being the strongest
 	 * Priority is given to if the cell is living

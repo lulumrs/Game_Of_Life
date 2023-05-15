@@ -27,7 +27,7 @@ public class Simulator extends Thread {
 		stopFlag=false;
 		pauseFlag=false;
 		loopDelay = 150;
-		minimalCellSize = 30;// in pixel
+		minimalCellSize = 10;// in pixel
 		loopedBorders = true;
 		//TODO : add other attribute initialization here
 		grid = new Grid(this);
@@ -165,8 +165,8 @@ public class Simulator extends Thread {
 	 * @return an array of Strings representing the simulated world's state
 	 */
 	public String[] getFileRepresentation() {
-		//TODO : implement
-		return new String[0];
+		FileSaver file = new FileSaver(grid);
+		return file.getStringRepresentation();
 	}
 	/**
 	 * Populates a [row/column] indicated by the given coordinate
@@ -176,8 +176,14 @@ public class Simulator extends Thread {
 	 * @param fileLine the String line representing the row
 	 */
 	public void populateLine(int coord, String fileLine) {
-		//TODO : implement and correct the comment
-		// As you have to choose row OR column depending on your implementation
+		if (coord<getHeight()) {
+			String[] values = fileLine.split(";");
+
+			for (int x = 0; x < values.length&&x<getWidth(); x++) {
+			    int value = Integer.parseInt(values[x]);
+			    grid.getCell(x, coord).adressNewValue(value);
+			}
+		}
 	}
 	
 	/**
@@ -187,7 +193,16 @@ public class Simulator extends Thread {
 	 * that any given cell will be living
 	 */
 	public void generateRandom(float chanceOfLife) {
-		//TODO implement
+		for (int row = 0; row < getHeight(); row++) {
+	        for (int col = 0; col < getWidth(); col++) {
+	            if (Math.random() <= chanceOfLife) {
+	                // Set the cell at (row, col) as alive
+	                grid.getCell(col, row).toggle();
+	            } else {
+	                continue;
+	            }
+	        }
+	    }
 	}
 	
 	/**
