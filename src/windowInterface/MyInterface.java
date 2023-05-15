@@ -148,7 +148,7 @@ public class MyInterface extends JFrame {
 		});
 		panelRight.add(btnBorder);
 
-		borderLabel = new JLabel("border : X");
+		borderLabel = new JLabel("border : loop");
 		panelRight.add(borderLabel);
 
 		panelDraw = new JPanelDraw(this);
