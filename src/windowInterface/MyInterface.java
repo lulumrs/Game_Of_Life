@@ -31,6 +31,7 @@ public class MyInterface extends JFrame {
 	private JPanel contentPane;
 	private JLabel stepLabel;
 	private JLabel borderLabel;
+	private JLabel borderLabelBorders;
 	private JLabel speedLabel;
 	private JPanelDraw panelDraw;
 	private Simulator mySimu = null;
@@ -150,6 +151,17 @@ public class MyInterface extends JFrame {
 
 		borderLabel = new JLabel("border : loop");
 		panelRight.add(borderLabel);
+		
+		JButton btnGridBehavior = new JButton("Grid behavior");
+		btnGridBehavior.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				clicButtonBehavior();
+			}
+		});
+		panelRight.add(btnGridBehavior);
+		
+		borderLabelBorders = new JLabel("border : expanding");
+		panelRight.add(borderLabelBorders);
 
 		panelDraw = new JPanelDraw(this);
 		contentPane.add(panelDraw, BorderLayout.CENTER);
@@ -190,6 +202,13 @@ public class MyInterface extends JFrame {
 			mySimu = null;
 			this.eraseLabels();
 			panelDraw.repaint();
+		}
+	}
+	
+	public void clicButtonBehavior() {
+		if (mySimu != null) {
+			mySimu.toggleBehavior();
+			borderLabelBorders.setText("border : " + (mySimu.isExpanding() ? "expanding" : "fixed"));
 		}
 	}
 

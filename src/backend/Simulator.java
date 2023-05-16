@@ -17,6 +17,7 @@ public class Simulator extends Thread {
 	private boolean stopFlag;
 	private boolean pauseFlag;
 	private boolean loopedBorders;
+	private boolean behavior;
 	private int loopDelay;
 	private int minimalCellSize;
 	public Grid grid;
@@ -29,6 +30,7 @@ public class Simulator extends Thread {
 		loopDelay = 150;
 		minimalCellSize = 10;// in pixel
 		loopedBorders = true;
+		behavior = true;
 		//TODO : add other attribute initialization here
 		grid = new Grid(this);
 
@@ -40,7 +42,16 @@ public class Simulator extends Thread {
 	 */
 	public int getWidth() {
 		int width;
-		width =(int) (mjf.getPanelDessin().getWidth()/minimalCellSize);
+		if (behavior) {
+			width =(int) (mjf.getPanelDessin().getWidth()/minimalCellSize);
+		} else {
+			if (grid == null) {
+				width =(int) (mjf.getPanelDessin().getWidth()/minimalCellSize);
+			} else {
+				width = grid.getTableau().get(0).size();
+			}
+		}
+		
 		return width;
 	}
 
@@ -50,7 +61,17 @@ public class Simulator extends Thread {
 	 */
 	public int getHeight() {
 		int height;
-		height =(int) (mjf.getPanelDessin().getHeight()/minimalCellSize);
+		
+		
+		if (behavior) {
+			height =(int) (mjf.getPanelDessin().getHeight()/minimalCellSize);
+		} else {
+			if (grid == null) {
+				height =(int) (mjf.getPanelDessin().getHeight()/minimalCellSize);
+			} else {
+				height = grid.getTableau().size();
+			}
+		}
 		return height;
 	}
 	
@@ -66,7 +87,9 @@ public class Simulator extends Thread {
 		int stepCount=0;
 		while(!stopFlag) {
 			stepCount++;
-			grid.updateGrid();
+			if (behavior) {
+				grid.updateGrid();
+			}
 			makeStep();
 			mjf.update(stepCount);
 			try {
@@ -176,10 +199,29 @@ public class Simulator extends Thread {
 	 * @param fileLine the String line representing the row
 	 */
 	public void populateLine(int coord, String fileLine) {
-		if (coord<getHeight()) {
-			String[] values = fileLine.split(";");
-
+		String[] values = fileLine.split(";");
+		if (coord<=getHeight()&&behavior) {
 			for (int x = 0; x < values.length&&x<getWidth(); x++) {
+			    int value = Integer.parseInt(values[x]);
+			    grid.getCell(x, coord).adressNewValue(value);
+			}
+		} else if (!behavior) {
+			//pas du tout optimisé, permet de réduire l'espace s'il a été créé trop grand au début
+			while (coord==getHeight()&&values.length==getWidth()) {
+				if (values.length<getWidth()) {
+					grid.removeCol();
+				}
+				if (values.length>getWidth()) {
+					grid.appendCol();
+				}
+				if (coord<getHeight()) {
+					grid.removeRow();
+				}
+				if (coord>getHeight()) {
+					grid.appendRow();
+				}
+			}
+			for (int x = 0; x < values.length; x++) {
 			    int value = Integer.parseInt(values[x]);
 			    grid.getCell(x, coord).adressNewValue(value);
 			}
@@ -203,6 +245,15 @@ public class Simulator extends Thread {
 	            }
 	        }
 	    }
+	}
+	
+	public void toggleBehavior() {
+		behavior = !behavior;
+		System.out.println(behavior);
+	}
+	
+	public boolean isExpanding() {
+		return behavior;
 	}
 	
 	/**
