@@ -314,7 +314,7 @@ public class MyInterface extends JFrame {
 
 	public void eraseLabels() {
 		this.setStepBanner("Step : X");
-		this.setBorderBanner("border : X");
+		this.setBorderBanner("border : loop");
 		speedSlider.setValue(3);
 	}
 
