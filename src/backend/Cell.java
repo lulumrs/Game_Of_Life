@@ -24,10 +24,7 @@ public class Cell {
 		return value;
 	}
 	public void toggle() {
-		value++;
-		if (value==6) {
-			value = 0;
-		}
+		value = (value+1)%6;
 	}
 	public void adressNewValue(int value) {
 		this.value = value;

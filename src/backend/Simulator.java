@@ -18,6 +18,7 @@ public class Simulator extends Thread {
 	private boolean pauseFlag;
 	private boolean loopedBorders;
 	private boolean behavior;
+	public boolean highLife;
 	private int loopDelay;
 	private int minimalCellSize;
 	public Grid grid;
@@ -32,6 +33,7 @@ public class Simulator extends Thread {
 		loopedBorders = true;
 		behavior = true;
 		//TODO : add other attribute initialization here
+		//highLife = mjf.checkBoxHigh.isSelected();
 		grid = new Grid(this);
 
 	}
@@ -123,7 +125,7 @@ public class Simulator extends Thread {
 		 */
 		for (int i = 0; i < getHeight();i++) {
 			for (int j = 0; j < getWidth();j++) {
-				setCell(j, i, grid.checkLiveOrDeath(j, i));
+				setCell(j, i, grid.checkLiveOrDeath(j, i, highLife));
 			}
 		}
 		for (int i = 0; i < getHeight();i++) {
