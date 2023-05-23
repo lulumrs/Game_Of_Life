@@ -53,10 +53,10 @@ public class Grid {
 	 * @param y
 	 * @return cell living type (0 if dead)
 	 */
-	public int checkLiveOrDeath(int x, int y) {
+	public int checkLiveOrDeath(int x, int y, boolean highLife) {
 		int returnedValue = 0;
 		for (int z = 1; z < 6; z++) {
-			if (getNeighborhoodOfCell(x, y, z)==3) {
+			if (getNeighborhoodOfCell(x, y, z)==3 || (getNeighborhoodOfCell(x, y, z)==6 && highLife)) {
 				returnedValue = z;
 			}
 			int CellValue = getCell(x, y).getValue();
