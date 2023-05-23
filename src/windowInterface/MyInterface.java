@@ -204,12 +204,18 @@ public class MyInterface extends JFrame {
 		return panelDraw;
 	}
 
+	/**
+	 * Create a new simulator if none exists
+	 * set it in the panelDraw
+	 */
 	public void instantiateSimu() {
 		if (mySimu == null) {
 			mySimu = new Simulator(this);
 			panelDraw.setSimu(mySimu);
 		}
 	}
+	
+	///////////HERE IS THE BUTTONS ACTIONS///////////
 
 	public void clicButtonGo() {
 		this.instantiateSimu();
