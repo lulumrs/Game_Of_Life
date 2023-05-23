@@ -5,6 +5,7 @@ import java.util.*;
 public class Grid {
 	public ArrayList<ArrayList<Cell>> tableau = new ArrayList<ArrayList<Cell>>();
 	private Simulator simu;
+	// here the grid depend on Simu, we have to change it so that it updates from Simu 
 	public Grid(Simulator simu) {
 		this.simu = simu;
 		appendRow();
