@@ -28,7 +28,7 @@ public class Simulator extends Thread {
 		stopFlag=false;
 		pauseFlag=false;
 		loopDelay = 150;
-		minimalCellSize = 10;// in pixel
+		minimalCellSize = 20;// in pixel
 		loopedBorders = true;
 		behavior = true;
 		//TODO : add other attribute initialization here
