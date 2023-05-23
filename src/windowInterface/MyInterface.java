@@ -15,6 +15,7 @@ import javax.swing.event.ChangeListener;
 import backend.Simulator;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 
@@ -31,6 +32,7 @@ public class MyInterface extends JFrame {
 	private JPanel contentPane;
 	private JLabel stepLabel;
 	private JLabel borderLabel;
+	private JLabel borderLabelBorders;
 	private JLabel speedLabel;
 	private JPanelDraw panelDraw;
 	private Simulator mySimu = null;
@@ -42,7 +44,7 @@ public class MyInterface extends JFrame {
 	 */
 	public MyInterface() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(10, 10, 500, 400);
+		setBounds(10, 10, 1000, 800);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -148,11 +150,46 @@ public class MyInterface extends JFrame {
 		});
 		panelRight.add(btnBorder);
 
-		borderLabel = new JLabel("border : X");
+		borderLabel = new JLabel("border : loop");
 		panelRight.add(borderLabel);
+		
+		JButton btnGridBehavior = new JButton("Grid behavior");
+		btnGridBehavior.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				clicButtonBehavior();
+			}
+		});
+		panelRight.add(btnGridBehavior);
+		
+		borderLabelBorders = new JLabel("border : expanding");
+		panelRight.add(borderLabelBorders);
 
 		panelDraw = new JPanelDraw(this);
 		contentPane.add(panelDraw, BorderLayout.CENTER);
+		
+		JCheckBox checkBoxHigh = new JCheckBox("high life");
+		checkBoxHigh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JCheckBox checkBoxHigh = (JCheckBox) event.getSource();
+				if (checkBoxHigh.isSelected()) {
+					mySimu.highLife = true;
+				}
+				else {
+					mySimu.highLife = false;
+				
+				}
+			}
+			
+		});
+		//add to panelRight
+		panelRight.add(checkBoxHigh);
+		
+		
+		
+		
+		
+		
 	}
 
 	public void setStepBanner(String s) {
@@ -190,6 +227,13 @@ public class MyInterface extends JFrame {
 			mySimu = null;
 			this.eraseLabels();
 			panelDraw.repaint();
+		}
+	}
+	
+	public void clicButtonBehavior() {
+		if (mySimu != null) {
+			mySimu.toggleBehavior();
+			borderLabelBorders.setText("border : " + (mySimu.isExpanding() ? "expanding" : "fixed"));
 		}
 	}
 
@@ -256,6 +300,7 @@ public class MyInterface extends JFrame {
 			writeFile(fileName, content);
 		}
 	}
+	
 
 	public String SelectFile() {
 		String s;
@@ -295,7 +340,7 @@ public class MyInterface extends JFrame {
 
 	public void eraseLabels() {
 		this.setStepBanner("Step : X");
-		this.setBorderBanner("border : X");
+		this.setBorderBanner("border : loop");
 		speedSlider.setValue(3);
 	}
 

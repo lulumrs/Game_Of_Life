@@ -1,6 +1,5 @@
 package backend;
 
-
 import windowInterface.MyInterface;
 //TODO : add imports you will need here
 /*
@@ -17,7 +16,12 @@ public class Simulator extends Thread {
 	private MyInterface mjf;
 	private boolean stopFlag;
 	private boolean pauseFlag;
+	private boolean loopedBorders;
+	private boolean behavior;
+	public boolean highLife;
 	private int loopDelay;
+	private int minimalCellSize;
+	public Grid grid;
 	//TODO : add declaration of additional attributes here
 
 	public Simulator(MyInterface mjfParam) {
@@ -25,7 +29,12 @@ public class Simulator extends Thread {
 		stopFlag=false;
 		pauseFlag=false;
 		loopDelay = 150;
+		minimalCellSize = 10;// in pixel
+		loopedBorders = true;
+		behavior = true;
 		//TODO : add other attribute initialization here
+		//highLife = mjf.checkBoxHigh.isSelected();
+		grid = new Grid(this);
 
 	}
 	
@@ -34,8 +43,18 @@ public class Simulator extends Thread {
 	 * @return the number of columns in the grid composing the simulated world
 	 */
 	public int getWidth() {
-		//TODO : correct return
-		return 0;
+		int width;
+		if (behavior) {
+			width =(int) (mjf.getPanelDessin().getWidth()/minimalCellSize);
+		} else {
+			if (grid == null) {
+				width =(int) (mjf.getPanelDessin().getWidth()/minimalCellSize);
+			} else {
+				width = grid.getTableau().get(0).size();
+			}
+		}
+		
+		return width;
 	}
 
 	/**
@@ -43,8 +62,19 @@ public class Simulator extends Thread {
 	 * @return the number of rows in the grid composing the simulated world
 	 */
 	public int getHeight() {
-		//TODO : correct return
-		return 0;
+		int height;
+		
+		
+		if (behavior) {
+			height =(int) (mjf.getPanelDessin().getHeight()/minimalCellSize);
+		} else {
+			if (grid == null) {
+				height =(int) (mjf.getPanelDessin().getHeight()/minimalCellSize);
+			} else {
+				height = grid.getTableau().size();
+			}
+		}
+		return height;
 	}
 	
 	public void run() {
@@ -59,6 +89,9 @@ public class Simulator extends Thread {
 		int stepCount=0;
 		while(!stopFlag) {
 			stepCount++;
+			if (behavior) {
+				grid.updateGrid();
+			}
 			makeStep();
 			mjf.update(stepCount);
 			try {
@@ -90,6 +123,16 @@ public class Simulator extends Thread {
 		 * be it as variables or as attributes you may add to the class Simulator,
 		 * by using their (public) methods.
 		 */
+		for (int i = 0; i < getHeight();i++) {
+			for (int j = 0; j < getWidth();j++) {
+				setCell(j, i, grid.checkLiveOrDeath(j, i, highLife));
+			}
+		}
+		for (int i = 0; i < getHeight();i++) {
+			for (int j = 0; j < getWidth();j++) {
+				grid.getCell(j, i).setValue();
+			}
+		}
 		
 	}
 
@@ -97,7 +140,7 @@ public class Simulator extends Thread {
 	 * Stops simulation by raising the stop flag used in the run method
 	 */
 	public void stopSimu() {
-		//TODO : set stopFlag to true
+		stopFlag = true;
 		
 	}
 
@@ -106,8 +149,7 @@ public class Simulator extends Thread {
 	 * by raising or lowering the pause flag used in the run method
 	 */
 	public void togglePause() {
-		//TODO : change value of boolean attribute pauseFlag
-		// from false to true, or from true to false
+		pauseFlag = !pauseFlag;
 
 	}
 	/**
@@ -118,13 +160,7 @@ public class Simulator extends Thread {
 	 * @param y coordinate on the y-axis (vertical)
 	 */
 	public void toggleCell(int x, int y) {
-		//TODO : change the value of the cell at coordinates (x,y)
-		/*
-		 * Note : the value of the cell is NOT a boolean, it is an integer.
-		 * O means dead, 1 means alive...
-		 * But the GUI can also print properly more values than that.
-		 * You might want to use this for the going further section.
-		 */
+		grid.getCell(x, y).toggle();
 	}
 	/**
 	 * get the value of a cell at coordinates
@@ -134,17 +170,18 @@ public class Simulator extends Thread {
 	 */
 	public int getCell(int x, int y) {
 		//TODO implement proper return
-		return 0;
+		return grid.getCell(x, y).getValue();
 	}
 
+
 	/**
-	 * set the value of a cell at coordinates
+	 * set the future value of a cell at coordinates
 	 * @param x coordinate
 	 * @param y coordinate
 	 * @param val the value to set inside the cell
 	 */
 	public void setCell(int x, int y, int val) {
-		//TODO implement
+		grid.getCell(x, y).setFutureValue(val);
 	}
 
 	/**
@@ -153,8 +190,8 @@ public class Simulator extends Thread {
 	 * @return an array of Strings representing the simulated world's state
 	 */
 	public String[] getFileRepresentation() {
-		//TODO : implement
-		return new String[0];
+		FileSaver file = new FileSaver(grid);
+		return file.getStringRepresentation();
 	}
 	/**
 	 * Populates a [row/column] indicated by the given coordinate
@@ -164,8 +201,33 @@ public class Simulator extends Thread {
 	 * @param fileLine the String line representing the row
 	 */
 	public void populateLine(int coord, String fileLine) {
-		//TODO : implement and correct the comment
-		// As you have to choose row OR column depending on your implementation
+		String[] values = fileLine.split(";");
+		if (coord<=getHeight()&&behavior) {
+			for (int x = 0; x < values.length&&x<getWidth(); x++) {
+			    int value = Integer.parseInt(values[x]);
+			    grid.getCell(x, coord).adressNewValue(value);
+			}
+		} else if (!behavior) {
+			//pas du tout optimisé, permet de réduire l'espace s'il a été créé trop grand au début
+			while (coord==getHeight()&&values.length==getWidth()) {
+				if (values.length<getWidth()) {
+					grid.removeCol();
+				}
+				if (values.length>getWidth()) {
+					grid.appendCol();
+				}
+				if (coord<getHeight()) {
+					grid.removeRow();
+				}
+				if (coord>getHeight()) {
+					grid.appendRow();
+				}
+			}
+			for (int x = 0; x < values.length; x++) {
+			    int value = Integer.parseInt(values[x]);
+			    grid.getCell(x, coord).adressNewValue(value);
+			}
+		}
 	}
 	
 	/**
@@ -175,7 +237,25 @@ public class Simulator extends Thread {
 	 * that any given cell will be living
 	 */
 	public void generateRandom(float chanceOfLife) {
-		//TODO implement
+		for (int row = 0; row < getHeight(); row++) {
+	        for (int col = 0; col < getWidth(); col++) {
+	            if (Math.random() <= chanceOfLife) {
+	                // Set the cell at (row, col) as alive
+	                grid.getCell(col, row).toggle();
+	            } else {
+	                continue;
+	            }
+	        }
+	    }
+	}
+	
+	public void toggleBehavior() {
+		behavior = !behavior;
+		System.out.println(behavior);
+	}
+	
+	public boolean isExpanding() {
+		return behavior;
 	}
 	
 	/**
@@ -184,8 +264,7 @@ public class Simulator extends Thread {
 	 * @return true if the borders are looping, false otherwise
 	 */
 	public boolean isLoopingBorder() {
-		//TODO implement correct return
-		return false;
+		return loopedBorders;
 	}
 	
 	/**
@@ -193,7 +272,7 @@ public class Simulator extends Thread {
 	 * depending on the present state
 	 */
 	public void toggleLoopingBorder() {
-		//TODO implement
+		loopedBorders = !loopedBorders;
 	}
 	
 	/**
@@ -201,6 +280,7 @@ public class Simulator extends Thread {
 	 * @param delay in milliseconds
 	 */
 	public void setLoopDelay(int delay) {
+		loopDelay = delay;
 		//TODO : implement
 	}
 }
