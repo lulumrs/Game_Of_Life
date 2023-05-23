@@ -24,7 +24,11 @@ public class FileSaver {
             position++;
         }
     }
-
+    
+    /**
+     * return the hole file in String
+     * @return String[]
+     */
     public String[] getStringRepresentation() {
         return outputString;
     }
