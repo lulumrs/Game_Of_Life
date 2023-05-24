@@ -249,11 +249,18 @@ public class Simulator extends Thread {
 	    }
 	}
 	
+	/**
+	 * Change the behavior of the simulator, is it gets bigger or if the cells gets bigger
+	 */
 	public void toggleBehavior() {
 		behavior = !behavior;
 		System.out.println(behavior);
 	}
 	
+	/**
+	 * check the behavior of the world
+	 * @return bool
+	 */
 	public boolean isExpanding() {
 		return behavior;
 	}

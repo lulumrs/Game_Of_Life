@@ -106,7 +106,10 @@ public class Grid {
 		}
 		return nbOfNeighbors;
 	}
-	
+	/**
+	 * in case the simulator behavior is "expending",
+	 * the line is adjusted with this function
+	 */
 	public void checkLineIntegrity() {
 		for (int i = 0; i<simu.getHeight();i++) {
 			if (tableau.get(i).size()!=simu.getWidth()) {
