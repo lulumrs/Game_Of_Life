@@ -4,15 +4,22 @@ import java.util.*;
 
 public class Grid {
 	public ArrayList<ArrayList<Cell>> tableau = new ArrayList<ArrayList<Cell>>();
-	private Simulator simu;
-	public Grid(Simulator simu) {
-		this.simu = simu;
+	private int width;
+	private int height;
+	private boolean loop;
+	
+	public Grid(int w, int h) {
+		width = w;
+		height = h;
+		
+		loop = true;
+		
 		appendRow();
-		while (simu.getWidth()!=tableau.get(0).size()||simu.getHeight()!=tableau.size()) {
-			if (simu.getHeight()>tableau.size()) {
+		while (width!=tableau.get(0).size()||height!=tableau.size()) {
+			if (height>tableau.size()) {
 				appendRow();
 			}
-			if (simu.getWidth()>tableau.get(0).size()) {
+			if (width>tableau.get(0).size()) {
 				appendCol();
 			}
 		}
@@ -21,17 +28,17 @@ public class Grid {
 	 * Update the size of the grid by adding rows or cols of Cells
 	 */
 	public void updateGrid() {
-		while (simu.getWidth()!=tableau.get(0).size()||simu.getHeight()!=tableau.size()) {
-			if (simu.getWidth()>tableau.get(0).size()) {
+		while (width!=tableau.get(0).size()||height!=tableau.size()) {
+			if (width>tableau.get(0).size()) {
 				appendCol();
 			}
-			if (simu.getWidth()<tableau.get(0).size()) {
+			if (width<tableau.get(0).size()) {
 				removeCol();
 			}
-			if (simu.getHeight()>tableau.size()) {
+			if (height>tableau.size()) {
 				appendRow();
 			}
-			if (simu.getHeight()<tableau.size()) {
+			if (height<tableau.size()) {
 				removeRow();
 			}
 		}
@@ -46,6 +53,11 @@ public class Grid {
 		return tableau;
 	}
 	
+	public void setNewGridSize(int w, int h) {
+		width = w;
+		height = h;
+	}
+	
 	/**
 	 * Return if the cell come to life; highest color being the strongest
 	 * Priority is given to if the cell is living
@@ -53,18 +65,76 @@ public class Grid {
 	 * @param y
 	 * @return cell living type (0 if dead)
 	 */
-	public int checkLiveOrDeath(int x, int y, boolean highLife) {
+	public int checkLiveOrDeath(int x, int y, String type) {
 		int returnedValue = 0;
 		for (int z = 1; z < 6; z++) {
-			if (getNeighborhoodOfCell(x, y, z)==3 || (getNeighborhoodOfCell(x, y, z)==6 && highLife)) {
-				returnedValue = z;
-			}
-			int CellValue = getCell(x, y).getValue();
-			if (CellValue!=0) {
-				if (getNeighborhoodOfCell(x, y, CellValue)==3||getNeighborhoodOfCell(x, y, CellValue)==2) {
-					returnedValue = CellValue;
+			// could had been done with 2 if but this way is readable
+			if (type == "Game of life") {
+				if (getNeighborhoodOfCell(x, y, z)==3) {
+					returnedValue = z;
+				}
+				int CellValue = getCell(x, y).getValue();
+				if (CellValue!=0) {
+					if (getNeighborhoodOfCell(x, y, CellValue)==3||getNeighborhoodOfCell(x, y, CellValue)==2) {
+						returnedValue = CellValue;
+					}
 				}
 			}
+			
+			if (type == "High Life") {//B36/S23
+				if (getNeighborhoodOfCell(x, y, z)==3||getNeighborhoodOfCell(x, y, z)==6) {
+					returnedValue = z;
+				}
+				int CellValue = getCell(x, y).getValue();
+				if (CellValue!=0) {
+					if (getNeighborhoodOfCell(x, y, CellValue)==3||getNeighborhoodOfCell(x, y, CellValue)==2) {
+						returnedValue = CellValue;
+					}
+				}
+			}
+			
+			if (type == "Labyrinthes") {//B3/S2345
+				if (getNeighborhoodOfCell(x, y, z)==3) {
+					returnedValue = z;
+				}
+				int CellValue = getCell(x, y).getValue();
+				if (CellValue!=0) {
+					if (getNeighborhoodOfCell(x, y, CellValue)==3||getNeighborhoodOfCell(x, y, CellValue)==2||getNeighborhoodOfCell(x, y, CellValue)==4||getNeighborhoodOfCell(x, y, CellValue)==5) {
+						returnedValue = CellValue;
+					}
+				}
+			}
+			
+			if (type == "Exploding with chaos") {//B2/S
+				if (getNeighborhoodOfCell(x, y, z)==2) {
+					returnedValue = z;
+				}
+			}
+			
+			if (type == "replicating paterns") {//B1357/S1357
+				if (getNeighborhoodOfCell(x, y, z)==1||getNeighborhoodOfCell(x, y, z)==3||getNeighborhoodOfCell(x, y, z)==5||getNeighborhoodOfCell(x, y, z)==7) {
+					returnedValue = z;
+				}
+				int CellValue = getCell(x, y).getValue();
+				if (CellValue!=0) {
+					if (getNeighborhoodOfCell(x, y, CellValue)==3||getNeighborhoodOfCell(x, y, CellValue)==1||getNeighborhoodOfCell(x, y, CellValue)==5||getNeighborhoodOfCell(x, y, CellValue)==7) {
+						returnedValue = CellValue;
+					}
+				}
+			}
+			
+			if (type == "day and night") {//B36/S23
+				if (getNeighborhoodOfCell(x, y, z)==3||getNeighborhoodOfCell(x, y, z)==6||getNeighborhoodOfCell(x, y, z)==7||getNeighborhoodOfCell(x, y, z)==8) {
+					returnedValue = z;
+				}
+				int CellValue = getCell(x, y).getValue();
+				if (CellValue!=0) {
+					if (getNeighborhoodOfCell(x, y, CellValue)==3||getNeighborhoodOfCell(x, y, CellValue)==4||getNeighborhoodOfCell(x, y, CellValue)==6||getNeighborhoodOfCell(x, y, CellValue)==7||getNeighborhoodOfCell(x, y, CellValue)==8) {
+						returnedValue = CellValue;
+					}
+				}
+			}
+			
 		}
 		return returnedValue;
 	}
@@ -82,16 +152,16 @@ public class Grid {
 					//check for the borders if they are looping or not !
 					int i_val = i;
 					int j_val = j;
-					if(j_val<0&&simu.isLoopingBorder()) {
+					if(j_val<0&&loop) {
 						j_val=tableau.get(0).size()-1;
 					}
-					if(i_val<0&&simu.isLoopingBorder()) {
+					if(i_val<0&&loop) {
 						i_val=tableau.size()-1;
 					}
-					if(j_val>tableau.get(0).size()-1&&simu.isLoopingBorder()) {
+					if(j_val>tableau.get(0).size()-1&&loop) {
 						j_val=0;
 					}
-					if(i_val>tableau.size()-1&&simu.isLoopingBorder()) {
+					if(i_val>tableau.size()-1&&loop) {
 						i_val=0;
 					}
 					//take into consideration only the part we are interested for to not look out of the grid
@@ -110,9 +180,9 @@ public class Grid {
 	 * the line is adjusted with this function
 	 */
 	public void checkLineIntegrity() {
-		for (int i = 0; i<simu.getHeight();i++) {
-			if (tableau.get(i).size()!=simu.getWidth()) {
-				for (int j = tableau.get(i).size()-1; j<simu.getWidth();j++) {
+		for (int i = 0; i<height;i++) {
+			if (tableau.get(i).size()!=width) {
+				for (int j = tableau.get(i).size()-1; j<width;j++) {
 					tableau.get(i).add(new Cell(0,0,0));
 				}
 			}
@@ -157,5 +227,9 @@ public class Grid {
 		for (int i=0; i<tableau.size();i++) {
 			tableau.get(i).remove(tableau.get(i).size() - 1);
 		}
+	}
+	
+	public void setLoop(boolean l) {
+		loop = l;
 	}
 }

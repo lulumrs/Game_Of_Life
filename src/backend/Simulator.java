@@ -21,6 +21,7 @@ public class Simulator extends Thread {
 	public boolean highLife;
 	private int loopDelay;
 	private int minimalCellSize;
+	private String gameType;
 	public Grid grid;
 	//TODO : add declaration of additional attributes here
 
@@ -32,9 +33,10 @@ public class Simulator extends Thread {
 		minimalCellSize = 10;// in pixel
 		loopedBorders = true;
 		behavior = true;
+		gameType = mjf.getGameType();
 		//TODO : add other attribute initialization here
 		//highLife = mjf.checkBoxHigh.isSelected();
-		grid = new Grid(this);
+		grid = new Grid(getWidth(),getHeight());
 
 	}
 	
@@ -90,6 +92,7 @@ public class Simulator extends Thread {
 		while(!stopFlag) {
 			stepCount++;
 			if (behavior) {
+				grid.setNewGridSize(getWidth(), getHeight());
 				grid.updateGrid();
 			}
 			makeStep();
@@ -125,7 +128,7 @@ public class Simulator extends Thread {
 		 */
 		for (int i = 0; i < getHeight();i++) {
 			for (int j = 0; j < getWidth();j++) {
-				setCell(j, i, grid.checkLiveOrDeath(j, i, highLife));
+				setCell(j, i, grid.checkLiveOrDeath(j, i, gameType));
 			}
 		}
 		for (int i = 0; i < getHeight();i++) {
@@ -182,6 +185,10 @@ public class Simulator extends Thread {
 	 */
 	public void setCell(int x, int y, int val) {
 		grid.getCell(x, y).setFutureValue(val);
+	}
+	
+	public void setTypeOfGame(String type) {
+		gameType = type;
 	}
 
 	/**
@@ -280,6 +287,7 @@ public class Simulator extends Thread {
 	 */
 	public void toggleLoopingBorder() {
 		loopedBorders = !loopedBorders;
+		grid.setLoop(loopedBorders);
 	}
 	
 	/**

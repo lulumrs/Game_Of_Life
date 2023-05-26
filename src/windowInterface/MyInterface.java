@@ -15,9 +15,9 @@ import javax.swing.event.ChangeListener;
 import backend.Simulator;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JComboBox;
 
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -38,6 +38,7 @@ public class MyInterface extends JFrame {
 	private Simulator mySimu = null;
 	private JSlider randSlider;
 	private JSlider speedSlider;
+	private String gameType = "Game of life";
 
 	/**
 	 * Create the frame.
@@ -167,25 +168,23 @@ public class MyInterface extends JFrame {
 		panelDraw = new JPanelDraw(this);
 		contentPane.add(panelDraw, BorderLayout.CENTER);
 		
-		JCheckBox checkBoxHigh = new JCheckBox("high life");
-		checkBoxHigh.addActionListener(new ActionListener() {
+		
+		String[] games = new String[] {"Game of life", "High Life", "Labyrinthes", "Exploding with chaos", "replicating paterns", "day and night"};
+		 
+		// create a combo box with the fixed array:
+		JComboBox<String> comboGames = new JComboBox<String>(games);
+		comboGames.setSelectedIndex(0);
+		
+		comboGames.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JCheckBox checkBoxHigh = (JCheckBox) event.getSource();
-				if (checkBoxHigh.isSelected()) {
-					mySimu.highLife = true;
-				}
-				else {
-					mySimu.highLife = false;
-				
-				}
+		        String selectedGame = (String) comboGames.getSelectedItem();
+		        mySimu.setTypeOfGame(selectedGame);
+		        gameType = selectedGame;
 			}
 			
 		});
-		//add to panelRight
-		panelRight.add(checkBoxHigh);
-		
-		
+		panelRight.add(comboGames);
 		
 		
 		
@@ -202,6 +201,10 @@ public class MyInterface extends JFrame {
 
 	public JPanelDraw getPanelDessin() {
 		return panelDraw;
+	}
+	
+	public String getGameType() {
+		return gameType;
 	}
 
 	/**
