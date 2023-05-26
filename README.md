@@ -20,13 +20,13 @@ With "loop" they are connected, the top one to the bottom one and the right to t
 
 With "closed" they act as walls, the cells can't interact through them.
 
-##Patterns
+## Patterns
 
-###File gestionnaire
+### File gestionnaire
 
 You can load saved files but also read some
 
-###Maked paterns
+### Maked paterns
 There is some patterns that are interesting to see for the new variations of the game of life, they are named with approximatly the same name than the variant.
 
 ### High life
