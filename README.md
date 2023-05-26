@@ -26,7 +26,7 @@ With "closed" they act as walls, the cells can't interact through them.
 
 You can load saved files but also read some
 
-### Maked paterns
+### Maked patterns
 There is some patterns that are interesting to see for the new variations of the game of life, they are named with approximatly the same name than the variant.
 
 ### High life
