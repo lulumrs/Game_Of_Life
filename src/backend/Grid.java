@@ -58,6 +58,17 @@ public class Grid {
 		height = h;
 	}
 	
+	//get width and height because else there is sync trouble with the size of the draw panel
+	//and the grid where some times it differs a short moment
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
 	/**
 	 * Return if the cell come to life; highest color being the strongest
 	 * Priority is given to if the cell is living

@@ -31,8 +31,8 @@ public class Simulator extends Thread {
 		pauseFlag=false;
 		loopDelay = 150;
 		minimalCellSize = 10;// in pixel
-		loopedBorders = true;
-		behavior = true;
+		loopedBorders = mjf.getLooping();
+		behavior = mjf.getBehavior();
 		gameType = mjf.getGameType();
 		//TODO : add other attribute initialization here
 		//highLife = mjf.checkBoxHigh.isSelected();
@@ -79,6 +79,13 @@ public class Simulator extends Thread {
 		return height;
 	}
 	
+	public void updateSize() {
+		if (behavior) {
+			grid.setNewGridSize(getWidth(), getHeight());
+			grid.updateGrid();
+		}
+	}
+	
 	public void run() {
 		//WARNING : Do not modify this.
 		/*Exception : 
@@ -118,22 +125,15 @@ public class Simulator extends Thread {
 	 * its state at time t to its state at time t+1
 	 */
 	public void makeStep() {
-		//TODO : fill in for Simulator behavior.
-		/*
-		 * Do not Hesitate to write other (private) methods in this class 
-		 * to use them here,
-		 * or other classes from which you might use instances here, 
-		 * be it as variables or as attributes you may add to the class Simulator,
-		 * by using their (public) methods.
-		 */
-		for (int i = 0; i < getHeight();i++) {
-			for (int j = 0; j < getWidth();j++) {
-				setCell(j, i, grid.checkLiveOrDeath(j, i, gameType));
+		//change the pre state to what it should be depending on the game
+		for (int i = 0; i < grid.getWidth();i++) {
+			for (int j = 0; j < grid.getHeight();j++) {
+				setCell(i, j, grid.checkLiveOrDeath(i, j, gameType));
 			}
 		}
-		for (int i = 0; i < getHeight();i++) {
-			for (int j = 0; j < getWidth();j++) {
-				grid.getCell(j, i).setValue();
+		for (int i = 0; i < grid.getWidth();i++) {
+			for (int j = 0; j < grid.getHeight();j++) {
+				grid.getCell(i, j).setValue();
 			}
 		}
 		
@@ -209,7 +209,7 @@ public class Simulator extends Thread {
 	 */
 	public void populateLine(int coord, String fileLine) {
 		String[] values = fileLine.split(";");
-		if (coord<=getHeight()&&behavior) {
+		if (coord<getHeight()&&behavior) {
 			for (int x = 0; x < values.length&&x<getWidth(); x++) {
 			    int value = Integer.parseInt(values[x]);
 			    grid.getCell(x, coord).adressNewValue(value);

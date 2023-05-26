@@ -39,6 +39,8 @@ public class MyInterface extends JFrame {
 	private JSlider randSlider;
 	private JSlider speedSlider;
 	private String gameType = "Game of life";
+	private boolean behavior = true;
+	private boolean looping = true;
 
 	/**
 	 * Create the frame.
@@ -206,6 +208,14 @@ public class MyInterface extends JFrame {
 	public String getGameType() {
 		return gameType;
 	}
+	
+	public boolean getLooping() {
+		return looping;
+	}
+	
+	public boolean getBehavior() {
+		return behavior;
+	}
 
 	/**
 	 * Create a new simulator if none exists
@@ -243,6 +253,9 @@ public class MyInterface extends JFrame {
 		if (mySimu != null) {
 			mySimu.toggleBehavior();
 			borderLabelBorders.setText("border : " + (mySimu.isExpanding() ? "expanding" : "fixed"));
+		} else {
+			behavior = !behavior;
+			borderLabelBorders.setText("border : " + (behavior ? "expanding" : "fixed"));
 		}
 	}
 
@@ -256,6 +269,9 @@ public class MyInterface extends JFrame {
 		if (mySimu != null) {
 			mySimu.toggleLoopingBorder();
 			borderLabel.setText("border : " + (mySimu.isLoopingBorder() ? "loop" : "closed"));
+		} else {
+			looping = !looping;
+			borderLabel.setText("border : " + (looping ? "loop" : "closed"));
 		}
 	}
 

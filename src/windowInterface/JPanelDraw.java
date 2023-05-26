@@ -44,6 +44,7 @@ public class JPanelDraw extends JPanel {
 		super.paintComponent(g);
 		this.setBackground(Color.black);
 		if (mySimu != null) {
+			mySimu.updateSize();
 			// Draw Interface from state of simulator
 			float cellWidth = (float) this.getWidth() / (float) mySimu.getWidth();
 			float cellHeight = (float) this.getHeight() / (float) mySimu.getHeight();
