@@ -6,6 +6,8 @@ Standard game of life with different mode.
 
 You can swap different gameMode on the fly for more pleasure to the eyes !
 
+Everything can be changed on the fly, the way to resize and the looping of the borders !
+
 ### Behavior
 You can change the size of the way to extend the world.
 
