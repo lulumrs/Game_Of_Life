@@ -21,7 +21,9 @@ With "loop" they are connected, the top one to the bottom one and the right to t
 With "closed" they act as walls, the cells can't interact through them.
 
 ##Patterns
+
 ###File gestionnaire
+
 You can load saved files but also read some
 
 ###Maked paterns
