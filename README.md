@@ -34,6 +34,8 @@ With this, you can change the behavior of the cells, they will survive if they h
 
 ### Labyrinth
 With this, they will draw a labyrinth ! 
+test
+
 
 ### Explosions and chaos
 With this, a small form can explode to complete chaos !
